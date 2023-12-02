@@ -1,23 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import Login from './Login';
 
 function App() {
+  useEffect(() => {
+    // Parse the URL to check for OAuth callback data
+    const hash = window.location.hash;
+    if (hash) {
+      const params = new URLSearchParams(hash.slice(1)); // Remove the '#' part
+      const accessToken = params.get('access_token');
+
+      if (accessToken) {
+        // Handle the access token (store it, fetch user data, etc.)
+        console.log('Access Token:', accessToken);
+      }
+    }
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Login />
     </div>
   );
 }
