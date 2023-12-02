@@ -75,10 +75,14 @@ chatApiCall();
 // });
 
 // working with the data base
+
 app.get('/users', (req, res) => {
   db.query('SELECT * FROM new_user_repositories', (err, results) => {
-      if (err) throw err;
-      res.json(results);
+    if (err) {
+      console.error(err);
+      res.status(500).send('Database query failed');
+      return;
+  }
   });
 });
 
