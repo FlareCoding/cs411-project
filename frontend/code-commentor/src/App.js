@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Login from './Login';
+import HomeScreen from './HomeScreen';
 import { getUserProfile } from './api'; // Adjust the path as necessary
 
 function App() {
@@ -50,13 +51,11 @@ function App() {
       {!userData ? (
         <Login />
       ) : (
-        <div>
-          <h2>Welcome, {userData.name}</h2>
-          <p>Email: {userData.email}</p>
-          <button onClick={logout} style={{ padding: '10px 20px', fontSize: '16px', backgroundColor: '#f44336', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
-            Logout
-          </button>
-        </div>
+        <HomeScreen 
+          username={userData.name} 
+          email={userData.email} 
+          onLogout={logout} 
+        />
       )}
     </div>
   );
