@@ -11,16 +11,24 @@ const handleLogin = () => {
     window.location.href = oauthUrl;
 };
 
-return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <div style={{ textAlign: 'center' }}>
-            <h1>Welcome to My App</h1>
-            <button onClick={handleLogin} style={{ padding: '10px 20px', fontSize: '16px' }}>
-                Login with OAuth Provider
-            </button>
+    const buttonStyle = {
+        padding: '10px 20px',
+        fontSize: '16px',
+        backgroundColor: '#4CAF50',
+        color: 'white',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer'
+    };
+    
+    return (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', flexDirection: 'column' }}>
+        <h1 style={{ marginBottom: '20px' }}>Welcome to My App</h1>
+        <button onClick={handleLogin} style={buttonStyle}>
+            Login with OAuth Provider
+        </button>
         </div>
-    </div>
-);
+    );
 }
   
 export default Login;
