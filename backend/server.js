@@ -1,7 +1,7 @@
 const express = require('express');
-const axios = require('axios')
-const app = express();
 // const OpenAI = require('openai');
+const thirdPartyApi = require('./third-party-api');
+const app = express();
 // require('dotenv').config();
 
 // const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -35,33 +35,6 @@ const app = express();
 
 // chatApiCall();
 
-// async function getRepoContents(repoUrl, path = '') {
-//   try {
-//     // Extract the owner and repo name from the URL
-//     const repoPath = new URL(repoUrl).pathname;
-//     const [owner, repo] = repoPath.split('/').filter(part => part);
-
-//     const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
-//     const response = await axios.get(apiUrl);
-
-//     // Recursively fetch contents for directories
-//     let files = [];
-//     for (const item of response.data) {
-//       if (item.type === 'file') {
-//         files.push({ name: item.name, path: item.path, type: item.type });
-//       } else if (item.type === 'dir') {
-//         const nestedFiles = await getRepoContents(repoUrl, item.path);
-//         files = files.concat(nestedFiles);
-//       }
-//     }
-
-//     return files;
-//   } catch (error) {
-//     console.error('Error fetching repository contents:', error);
-//     throw error;
-//   }
-// }
-
 // // Example usage
 // getRepoContents('https://github.com/FlareCoding/tcp_friend').then(files => {
 //   console.log(files);
@@ -81,6 +54,22 @@ app.get('/users', (req, res) => {
       return;
   }
   });
+});
+
+app.get('/api/read_repo', async (req, res) => {
+  const gitRepoLink = req.query.repoLink;
+
+  try {
+    // Call the function and wait for the result
+    const repoContents = await thirdPartyApi.fetchGithubRepoContents(gitRepoLink);
+
+    // Send the result back
+    res.json(repoContents);
+  } catch (error) {
+    // Handle any errors that occur during the fetch
+    console.error('Error fetching GitHub Repo Contents:', error);
+    res.status(500).send('Error fetching repository contents');
+  }
 });
 
 // starts server

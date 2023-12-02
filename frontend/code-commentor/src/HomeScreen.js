@@ -36,16 +36,15 @@ function Modal({ onSubmit, onClose }) {
 
 function HomeScreen({ username, email, onLogout }) {
   const [githubRepos, setGithubRepos] = useState([]);
-  const [files, setFiles] = useState([]);
+  const [repoFiles, setRepoFiles] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetchGithubRepos();
-    fetchFiles();
   });
 
   // Function to handle the submission of the GitHub repo link
-  const handleLinkRepoSubmit = (repoLink) => {
+  const handleLinkRepoSubmit = async (repoLink) => {
     if (repoLink ===  '') {
       return;
     }
@@ -59,6 +58,9 @@ function HomeScreen({ username, email, onLogout }) {
     setShowModal(false);
 
     console.log('Repo link:', repoLink);
+
+    // Send GET request to the backend
+    fetchRepoFiles(repoLink);
   };
 
   // Placeholder function for fetching GitHub repos
@@ -68,9 +70,19 @@ function HomeScreen({ username, email, onLogout }) {
   };
 
   // Placeholder function for fetching files
-  const fetchFiles = async () => {
-    const files = await mockApiCall(['File 1', 'File 2', 'File 3']);
-    setFiles(files);
+  const fetchRepoFiles = async (repoUrl) => {
+    try {
+      const response = await fetch(`http://localhost:4000/api/read_repo?repoLink=${encodeURIComponent(repoUrl)}`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json(); // Assuming your server responds with JSON data
+      console.log('Response from server:', data);
+      // Handle the response data here
+      setRepoFiles(data);
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error);
+    }
   };
 
   // Mock API call
@@ -96,7 +108,7 @@ function HomeScreen({ username, email, onLogout }) {
       </ul>
       <h3>Files in Selected Repo</h3>
       <ul style={styles.list}>
-        {files.map((file, index) => <li key={index}>{file}</li>)}
+        {repoFiles.map((file, index) => <li key={index}>{file.path}</li>)}
       </ul>
 
       {showModal && (
