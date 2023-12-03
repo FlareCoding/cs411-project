@@ -1,10 +1,10 @@
 ### GET Request
-GET http://localhost:4000/users
-
-### POST Request
-POST http://localhost:4000/api/resource
+POST http://localhost:4000/api/update_user
 Content-Type: application/json
 
 {
-  "key": "value"
+  "repoLink": "whatever",
+  "username": "whatever",
+  "email": "whatever"
 }
+

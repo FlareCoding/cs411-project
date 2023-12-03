@@ -1,4 +1,4 @@
-const db = require('../database/database.js');
+const db = require('../database/database.js').connection;
 const express = require('express');
 const thirdPartyApi = require('./third-party-api');
 const app = express();
@@ -34,6 +34,24 @@ app.get('/api/read_repo', async (req, res) => {
     console.error('Error fetching GitHub Repo Contents:', error);
     res.status(500).send('Error fetching repository contents');
   }
+});
+
+// getting the repo link from the user
+app.post('/api/update_user', async (req, res) => {
+  const gitRepoLink = req.query.repoLink;
+  const user_name = req.query.username;
+  const user_email = req.query.email;
+  const insertQuery = 'INSERT INTO new_user_repositories (user_email, user_name, repo_link) VALUES (?, ?, ?)';
+
+  db.query(insertQuery, [user_email, user_name, gitRepoLink], (err, results) => {
+    if (err) {
+      console.error('Error executing query:', err);
+      res.status(500).send('Error saving data to the database');
+      return;
+    }
+
+    res.status(200).send('Data saved successfully');
+  });
 });
 
 // starts server
