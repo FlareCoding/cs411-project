@@ -33,6 +33,15 @@ function App() {
   const fetchUserProfile = async (accessToken) => {
     try {
       const data = await getUserProfile(accessToken);
+      if (!data.email) {
+        // DEBUG USER
+        setUserData({
+          user: "DEBUG",
+          email: "DEBUG"
+        })
+        return;
+      }
+
       setUserData(data);
       console.log('User data fetched successfully.');
     } catch (error) {

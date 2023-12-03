@@ -36,6 +36,15 @@ app.get('/api/read_repo', async (req, res) => {
   }
 });
 
+app.get('/api/document_file', async (req, res) => {
+  const gitRepoLink = req.query.repoLink;
+  const filepath = req.query.filepath;
+
+  console.log("TARGET FILE URL: " + gitRepoLink + "/" + filepath);
+
+  res.json({});
+});
+
 // starts server
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
