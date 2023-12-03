@@ -1,3 +1,5 @@
+const db = require('../database/database.js');
+
 const express = require('express');
 // const OpenAI = require('openai');
 const thirdPartyApi = require('./third-party-api');
