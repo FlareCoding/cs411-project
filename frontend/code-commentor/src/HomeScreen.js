@@ -1,38 +1,7 @@
 import React, { useState, useEffect } from 'react';
-
-function Modal({ onSubmit, onClose }) {
-  const [repoLink, setRepoLink] = useState('');
-
-  const handleLinkChange = (event) => {
-    setRepoLink(event.target.value);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    onSubmit(repoLink);
-  };
-
-  return (
-    <div style={styles.modalOverlay}>
-      <div style={styles.modalContent}>
-        <h2 style={styles.modalHeader}>Link a GitHub Repo</h2>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Paste the repo link here"
-            value={repoLink}
-            onChange={handleLinkChange}
-            style={styles.input}
-          />
-          <div style={styles.buttonContainer}>
-            <button type="submit" style={{ ...styles.button, ...styles.submitButton }}>Submit</button>
-            <button onClick={onClose} style={{ ...styles.button, ...styles.cancelButton }}>Cancel</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
+import Modal from './Modal'; // Import Modal component if it's also a separate component
+import Header from './HomeScreenHeader'; // Import Header component
+import './HomeScreen.css'; // Import the CSS for HomeScreen
 
 function HomeScreen({ username, email, onLogout }) {
   const [githubRepos, setGithubRepos] = useState([]);
@@ -108,29 +77,23 @@ function HomeScreen({ username, email, onLogout }) {
   };  
 
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <div>
-          <h2>{username}</h2>
-          <p>{email}</p>
-        </div>
-        <button onClick={onLogout} style={styles.logoutButton}>Logout</button>
-      </div>
-      <button style={styles.button} onClick={() => setShowModal(true)}>Link a GitHub Repo</button>
+    <div className="container">
+      <Header username={username} email={email} onLogout={onLogout} />
+      <button className="button" onClick={() => setShowModal(true)}>Link a GitHub Repo</button>
       <h3>Linked GitHub Repos</h3>
-      <ul style={styles.list}>
+      <ul className="list">
         {githubRepos.map((repo, index) => <li key={index}>{repo}</li>)}
       </ul>
       <h3>Files in Selected Repo</h3>
-      <div style={styles.listContainer}>
-        <ul style={styles.list}>
+      <div className="listContainer">
+        <ul className="list">
           {repoFiles.map((file, index) => (
-            <li key={index} style={{ listStyleType: 'none' }}>
-              <button 
-                style={styles.buttonListItem}
-                onMouseEnter={(e) => e.target.style.backgroundColor = '#555'} // Change color on hover
-                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'} // Revert color on mouse leave
-                onClick={() => handleFileClicked(file.path)} // Handle click event
+            <li key={index} className="listItem">
+              <button
+                className="buttonListItem"
+                onMouseEnter={(e) => e.target.classList.add('buttonListItemHover')}
+                onMouseLeave={(e) => e.target.classList.remove('buttonListItemHover')}
+                onClick={() => handleFileClicked(file.path)}
               >
                 {file.path}
               </button>
@@ -138,116 +101,12 @@ function HomeScreen({ username, email, onLogout }) {
           ))}
         </ul>
       </div>
-
+  
       {showModal && (
         <Modal onSubmit={handleLinkRepoSubmit} onClose={() => setShowModal(false)} />
       )}
     </div>
   );
 }
-
-// Styles
-const styles = {
-  container: {
-    backgroundColor: '#1a1a1a',
-    color: 'white',
-    padding: '20px',
-    minHeight: '100vh',
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '20px',
-  },
-  logoutButton: {
-    backgroundColor: '#f44336',
-    color: 'white',
-    padding: '10px 20px',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-  },
-  button: {
-    backgroundColor: '#4CAF50',
-    color: 'white',
-    padding: '10px 20px',
-    margin: '10px 0',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-  },
-  list: {
-    listStyleType: 'none',
-    paddingLeft: '0',
-  },
-  modalOverlay: {
-    position: 'fixed',
-    top: '0',
-    left: '0',
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: '1000',
-    animation: 'fadeIn 0.3s',
-  },
-  modalContent: {
-    backgroundColor: '#2a2d37',
-    padding: '20px',
-    borderRadius: '10px',
-    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)',
-    width: '50%',
-    maxWidth: '500px',
-    color: 'white',
-  },
-  modalHeader: {
-    marginTop: '0',
-  },
-  input: {
-    width: '90%',
-    padding: '10px',
-    margin: '10px 0',
-    borderRadius: '5px',
-    border: '1px solid #555',
-    backgroundColor: '#1c1e24',
-    color: 'white',
-  },
-  buttonContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  submitButton: {
-    backgroundColor: '#4CAF50',
-  },
-  cancelButton: {
-    backgroundColor: '#f44336',
-  },
-  buttonListItem: {
-    backgroundColor: 'transparent', // Transparent background
-    color: 'white', // Text color
-    padding: '5px 10px', // Padding inside the button
-    margin: '5px 0', // Margin for vertical spacing
-    border: '0px solid transparent', // White border
-    borderRadius: '5px', // Rounded corners
-    cursor: 'pointer', // Cursor changes to indicate it's clickable
-    display: 'block', // Stack buttons vertically
-    textAlign: 'left', // Align text to the left
-    transition: 'background-color 0.1s', // Transition for the hover effect
-    width: '100%'
-  },
-  buttonListItemHover: {
-    backgroundColor: '#555', // Darker background on hover
-    color: 'white',
-  },
-  listContainer: {
-    width: 'auto', // Auto width based on content
-    maxWidth: '400px', // Maximum width of the container
-    margin: '0 auto', // Center the container
-    padding: '0', // Reset default padding
-  },
-};
 
 export default HomeScreen;
