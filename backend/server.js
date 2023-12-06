@@ -3,13 +3,6 @@ const express = require('express');
 const thirdPartyApi = require('./third-party-api');
 const app = express();
 
-TEST_PROMPT = `
-Please document the following functions in a doxygen style comment above the function declaration only
-uint64_t _resetXhciController(int status) {
-  // some code
-}
-`;
-
 app.get('/users', (req, res) => {
   db.query('SELECT * FROM new_user_repositories', (err, results) => {
     if (err) {
@@ -58,9 +51,22 @@ app.get('/api/document_file', async (req, res) => {
   const gitRepoLink = req.query.repoLink;
   const filepath = req.query.filepath;
 
-  console.log("TARGET FILE URL: " + gitRepoLink + "/" + filepath);
+  try {
+    const content = await thirdPartyApi.fetchGithubFileContent(gitRepoLink, filepath);
+    const prompt = `Please place comments above each of the functions in the following code without adding any extra information or commentary:\n${content}`;
+    console.log('Sent request to ChatGPT-3.5, awaiting response....');
 
-  res.json({});
+    const response = await thirdPartyApi.requestChatGptResponse(prompt); // Await the response
+    console.log(response);
+
+    if (response) {
+      res.send({ response });
+    } else {
+      res.status(500).send('Error in getting openai-chatgpt response');
+    }
+  } catch (error) {
+    res.status(500).send(`Error occurred while generating documentation for file: ${error}`);
+  }
 });
 
 // starts server

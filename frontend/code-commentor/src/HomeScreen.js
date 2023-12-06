@@ -36,6 +36,7 @@ function Modal({ onSubmit, onClose }) {
 
 function HomeScreen({ username, email, onLogout }) {
   const [githubRepos, setGithubRepos] = useState([]);
+  const [selectedRepoUrl, setSelectedRepoUrl] = useState('');
   const [repoFiles, setRepoFiles] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
@@ -79,6 +80,7 @@ function HomeScreen({ username, email, onLogout }) {
       const data = await response.json(); // Assuming your server responds with JSON data
       console.log('Response from server:', data);
       // Handle the response data here
+      setSelectedRepoUrl(repoUrl);
       setRepoFiles(data);
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
@@ -91,6 +93,19 @@ function HomeScreen({ username, email, onLogout }) {
       setTimeout(() => resolve(data), 1000);
     });
   };
+
+  const handleFileClicked = async (filePath) => {
+    try {
+      const response = await fetch(`http://localhost:4000/api/document_file?repoLink=${encodeURIComponent(selectedRepoUrl)}&filepath=${filePath}`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json(); // Assuming your server responds with JSON data
+      console.log('Response from server:', data);
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error);
+    }
+  };  
 
   return (
     <div style={styles.container}>
@@ -107,9 +122,22 @@ function HomeScreen({ username, email, onLogout }) {
         {githubRepos.map((repo, index) => <li key={index}>{repo}</li>)}
       </ul>
       <h3>Files in Selected Repo</h3>
-      <ul style={styles.list}>
-        {repoFiles.map((file, index) => <li key={index}>{file.path}</li>)}
-      </ul>
+      <div style={styles.listContainer}>
+        <ul style={styles.list}>
+          {repoFiles.map((file, index) => (
+            <li key={index} style={{ listStyleType: 'none' }}>
+              <button 
+                style={styles.buttonListItem}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#555'} // Change color on hover
+                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'} // Revert color on mouse leave
+                onClick={() => handleFileClicked(file.path)} // Handle click event
+              >
+                {file.path}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
 
       {showModal && (
         <Modal onSubmit={handleLinkRepoSubmit} onClose={() => setShowModal(false)} />
@@ -196,7 +224,30 @@ const styles = {
   },
   cancelButton: {
     backgroundColor: '#f44336',
-  }
+  },
+  buttonListItem: {
+    backgroundColor: 'transparent', // Transparent background
+    color: 'white', // Text color
+    padding: '5px 10px', // Padding inside the button
+    margin: '5px 0', // Margin for vertical spacing
+    border: '0px solid transparent', // White border
+    borderRadius: '5px', // Rounded corners
+    cursor: 'pointer', // Cursor changes to indicate it's clickable
+    display: 'block', // Stack buttons vertically
+    textAlign: 'left', // Align text to the left
+    transition: 'background-color 0.1s', // Transition for the hover effect
+    width: '100%'
+  },
+  buttonListItemHover: {
+    backgroundColor: '#555', // Darker background on hover
+    color: 'white',
+  },
+  listContainer: {
+    width: 'auto', // Auto width based on content
+    maxWidth: '400px', // Maximum width of the container
+    margin: '0 auto', // Center the container
+    padding: '0', // Reset default padding
+  },
 };
 
 export default HomeScreen;
