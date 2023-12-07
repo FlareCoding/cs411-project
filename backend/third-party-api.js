@@ -1,12 +1,16 @@
+// Import required modules
 const axios = require('axios');
 const OpenAI = require('openai');
 const fetch = require('node-fetch');
 require('dotenv').config();
 
+// Get GitHub API key from environment variables
 const GITHUB_API_KEY = process.env.GITHUB_API_KEY;
 
+// Create an instance of the OpenAI API client
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+// Function to fetch the content of a specific file in a GitHub repository
 async function fetchGithubFileContent(repo, filepath) {
   // Extract the necessary parts from the GitHub repo URL
   const repoParts = repo.replace('https://github.com/', '').split('/');
@@ -27,14 +31,15 @@ async function fetchGithubFileContent(repo, filepath) {
   }
 }
 
+// Function to fetch the contents of a GitHub repository
 async function fetchGithubRepoContents(repoUrl, path = '') {
   let files = [];
-  
+
   try {
     // Extract the owner and repo name from the URL
     const repoPath = new URL(repoUrl).pathname;
     const [owner, repo] = repoPath.split('/').filter(part => part);
-    
+
     const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
     const headers = {
       'Authorization': `token ${GITHUB_API_KEY}`
@@ -71,11 +76,12 @@ async function fetchGithubRepoContents(repoUrl, path = '') {
   return files;
 }
 
+// Function to request a chat-based response from the GPT-3.5 model
 async function requestChatGptResponse(prompt) {
   try {
     const chatCompletion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
-      messages: [{"role": "user", "content": prompt}],
+      messages: [{ "role": "user", "content": prompt }],
     });
     return chatCompletion.choices[0].message;  // Return the response message
   } catch (error) {
@@ -92,6 +98,7 @@ async function requestChatGptResponse(prompt) {
   }
 }
 
+// Export the functions for use in other modules
 module.exports = {
   fetchGithubFileContent,
   fetchGithubRepoContents,
