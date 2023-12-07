@@ -1,7 +1,8 @@
 .container {
+    padding-top: 140px; /* Same as header height */
+    margin-left: 360px; /* Same as sidebar width */
     background-color: #1a1a1a;
     color: white;
-    padding: 20px;
     min-height: 100vh;
 }
   

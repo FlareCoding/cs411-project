@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Modal from './Modal'; // Import Modal component if it's also a separate component
 import Header from './HomeScreenHeader'; // Import Header component
+import Sidebar from './Sidebar';
 import './HomeScreen.css'; // Import the CSS for HomeScreen
 
 function HomeScreen({ username, email, onLogout }) {
@@ -8,6 +9,7 @@ function HomeScreen({ username, email, onLogout }) {
   const [selectedRepoUrl, setSelectedRepoUrl] = useState('');
   const [repoFiles, setRepoFiles] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   useEffect(() => {
     fetchGithubRepos();
@@ -78,6 +80,10 @@ function HomeScreen({ username, email, onLogout }) {
 
   return (
     <div className="container">
+      <Sidebar 
+        isOpen={isSidebarOpen} 
+        onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+      />
       <Header username={username} email={email} onLogout={onLogout} />
       <button className="button" onClick={() => setShowModal(true)}>Link a GitHub Repo</button>
       <h3>Linked GitHub Repos</h3>

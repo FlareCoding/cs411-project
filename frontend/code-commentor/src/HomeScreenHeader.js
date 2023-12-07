@@ -8,6 +8,7 @@ function Header({ username, email, onLogout }) {
         <h2>{username}</h2>
         <p>{email}</p>
       </div>
+      <h1>Code Commentor</h1>
       <button onClick={onLogout} className="logoutButton">Logout</button>
     </div>
   );

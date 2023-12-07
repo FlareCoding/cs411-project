@@ -1,8 +1,16 @@
 .header {
+    position: fixed;
+    top: 0;
+    left: 360px; /* Assuming the sidebar is 360px wide */
+    right: 0;
+    height: 100px; /* Or any height you prefer */
+    background-color: #333; /* Your desired header background color */
+    color: white; /* Your desired header text color */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    padding: 0 1rem;
+    z-index: 2; /* Higher than the sidebar to stay on top */
 }
 
 .logoutButton {

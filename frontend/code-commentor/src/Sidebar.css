@@ -1,0 +1,30 @@
+.sidebar {
+    width: 360px; /* Your desired width */
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #ca1c1c; /* Your desired sidebar background color */
+    color: white; /* Your desired sidebar text color */
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px; /* Height of the header */
+    z-index: 1;
+}
+  
+  /* If you have a toggle button, adjust its styling here */
+.toggleBtn {
+    position: absolute;
+    top: 50%;
+    right: -40px; /* Adjust as necessary */
+    transform: translateY(-50%);
+    /* Rest of the toggle button styles */
+}
+  
+.sidebarContent {
+    color: white;
+    padding: 10px;
+}
+  
+  /* Add additional styling for your sidebar content here */
+  
