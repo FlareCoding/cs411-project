@@ -8,6 +8,7 @@ function HomeScreen({ username, email, onLogout }) {
   const [selectedRepoUrl, setSelectedRepoUrl] = useState('');
   const [repoFiles, setRepoFiles] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const onRepoLinked = (repoLink) => {
     saveRepoToDatabase(repoLink, username, email);
@@ -34,6 +35,8 @@ function HomeScreen({ username, email, onLogout }) {
   };
 
   const handleFileClicked = async (filePath) => {
+    setIsLoading(true);
+
     try {
       const response = await fetch(`http://localhost:4000/api/document_file?repoLink=${encodeURIComponent(selectedRepoUrl)}&filepath=${filePath}`);
       if (!response.ok) {
@@ -43,6 +46,8 @@ function HomeScreen({ username, email, onLogout }) {
       console.log('Response from server:', data);
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -57,6 +62,7 @@ function HomeScreen({ username, email, onLogout }) {
             <li key={index} className="listItem">
               <button
                 className="buttonListItem"
+                disabled={isLoading}
                 onMouseEnter={(e) => e.target.classList.add('buttonListItemHover')}
                 onMouseLeave={(e) => e.target.classList.remove('buttonListItemHover')}
                 onClick={() => handleFileClicked(file.path)}

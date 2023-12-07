@@ -73,23 +73,41 @@
 }
   
 .buttonListItem {
-    background-color: transparent; /* Transparent background */
-    color: white; /* Text color */
-    padding: 5px 10px; /* Padding inside the button */
-    margin: 5px 0; /* Margin for vertical spacing */
-    border: 0px solid transparent; /* White border */
-    border-radius: 5px; /* Rounded corners */
-    cursor: pointer; /* Cursor changes to indicate it's clickable */
-    display: block; /* Stack buttons vertically */
-    text-align: left; /* Align text to the left */
-    transition: background-color 0.1s; /* Transition for the hover effect */
+    background-color: #333; /* Lighter background color by default */
+    color: white;
+    padding: 5px 10px;
+    margin: 5px 0;
+    border: 1px solid transparent; /* Add a subtle border */
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    text-align: left;
+    transition: background-color 0.1s, transform 0.1s; /* Added transform transition */
     width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
 }
-  
 
-.buttonListItemHover {
-    background-color: '#555';
-    color: 'white';
+.buttonListItem:hover {
+    background-color: #444; /* Darker background on hover */
+    color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Increased shadow on hover */
+}
+
+/* Style for disabled buttons */
+.buttonListItem:disabled {
+    background-color: #555; /* Dimmer background color */
+    color: #777; /* Dimmer text color */
+    cursor: default; /* Change cursor to default */
+    opacity: 0.5; /* Make the button semi-transparent */
+    transform: none; /* Remove any transformation */
+    box-shadow: none; /* Remove shadow */
+    pointer-events: none;
+}
+
+/* Ensure disabled buttons don't change on hover */
+.buttonListItem:disabled:hover {
+    background-color: #555; /* Keep the same background color */
+    color: #777; /* Keep the same text color */
 }
 
 .listContainer {
