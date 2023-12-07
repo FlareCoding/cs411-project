@@ -87,8 +87,7 @@ app.post('/api/update_user', async (req, res) => {
 
 // links the existing data entries for that email
 app.get('/api/get_repos_for_user', async (req, res) => {
-  const userEmail = req.body.email; 
-
+  const userEmail = req.query.email; 
   const query = 'SELECT * FROM new_user_repositories WHERE user_email = ?';
 
   db.query(query, [userEmail], (err, results) => {
@@ -97,7 +96,9 @@ app.get('/api/get_repos_for_user', async (req, res) => {
           res.status(500).send('Error fetching data from the database');
           return;
       }
-      res.json(results);
+      
+      let repoLinks = results.map(row => row.repo_link);
+      res.json(repoLinks);
   });
 });
 
