@@ -36,6 +36,25 @@ app.get('/api/read_repo', async (req, res) => {
   }
 });
 
+// Route to read Github-stored file content
+app.get('/api/read_file_content', async (req, res) => {
+  // Get the repository link and file path from the query parameters
+  const gitRepoLink = req.query.repoLink;
+  const filepath = req.query.filepath;
+
+  try {
+    // Fetch the file content from the GitHub repository
+    const content = await thirdPartyApi.fetchGithubFileContent(gitRepoLink, filepath);
+
+    // Send the result back as JSON
+    res.json(content);
+  } catch (error) {
+    // Handle any errors that occur during the fetch
+    console.error('Error fetching file content:', error);
+    res.status(500).send('Error fetching file content');
+  }
+});
+
 // Middleware to parse request body as JSON
 app.use(express.json());
 

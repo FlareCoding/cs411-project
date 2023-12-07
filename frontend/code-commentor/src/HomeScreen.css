@@ -132,6 +132,20 @@
     overflow: auto; /* In case of long code */
     background-color: #2d2d2d; /* Dark background for the code area */
     color: #ccc; /* Light text color for better readability */
+    position: relative;
+}
+
+.toggleCodeView {
+    position: absolute;
+    top: 10px; /* Adjust as needed */
+    right: 10px; /* Adjust as needed */
+    padding: 8px 16px;
+    background-color: #2b8b2e; /* Example color, change as desired */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 10; /* Ensure it's above other elements */
 }
 
 .spinner {

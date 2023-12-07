@@ -12,11 +12,13 @@ function HomeScreen({ username, email, onLogout }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFileContent, setSelectedFileContent] = useState('');
+  const [documentedFileContent, setDocumentedFileContent] = useState('');
+  const [showDocumented, setShowDocumented] = useState(true);
 
   useEffect(() => {
     // Update the state or DOM here with detectedLanguage
     Prism.highlightAll();
-  }, [selectedFileContent]);
+  }, [showDocumented, selectedFileContent, documentedFileContent]);
 
   const onRepoLinked = (repoLink) => {
     saveRepoToDatabase(repoLink, username, email);
@@ -46,19 +48,31 @@ function HomeScreen({ username, email, onLogout }) {
     setIsLoading(true);
 
     try {
+      let originalContent = 'ERROR OCCURED';
+      const originalContentResponse = await fetch(`http://localhost:4000/api/read_file_content?repoLink=${encodeURIComponent(selectedRepoUrl)}&filepath=${filePath}`);
+      if (originalContentResponse.ok) {
+        originalContent = await originalContentResponse.json();
+      }
+      
+      setSelectedFileContent(originalContent);
+
       const response = await fetch(`http://localhost:4000/api/document_file?repoLink=${encodeURIComponent(selectedRepoUrl)}&filepath=${filePath}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       const data = await response.json(); // Assuming your server responds with JSON data
       //console.log('Response from server:', data);
-      setSelectedFileContent(data.response.content);
+      setDocumentedFileContent(data.response.content);
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
-      setSelectedFileContent('');
+      setDocumentedFileContent('');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const toggleCodeView = () => {
+    setShowDocumented(!showDocumented);
   };
 
   return (
@@ -89,9 +103,14 @@ function HomeScreen({ username, email, onLogout }) {
         {isLoading ? (
           <div className="spinner"></div>  // Show spinner when loading
         ) : (
-          <pre><code className="language-clike">
-            {selectedFileContent}
-          </code></pre>
+          <>
+            <button className="toggleCodeView" onClick={toggleCodeView}>
+              {showDocumented ? "Show Original" : "Show Documented"}
+            </button>
+            <pre><code className="language-clike">
+              {showDocumented ? documentedFileContent : selectedFileContent}
+            </code></pre>
+          </>
         )}
       </div>
     </div>
