@@ -66,14 +66,14 @@ app.post('/api/update_user', async (req, res) => {
   const user_email = req.body.email;
 
   // Convert the repository link to JSON string
-  const gitRepoLinkJson = JSON.stringify([gitRepoLink]);
+  //const gitRepoLinkJson = JSON.stringify([gitRepoLink]);
 
   // Define the database insert query
   const insertQuery = 'INSERT INTO new_user_repositories (user_email, user_name, repo_link) VALUES (?, ?, ?)';
   console.log(`query: ${insertQuery}`);
 
   // Execute the insert query with values from the request body
-  db.query(insertQuery, [user_email, user_name, gitRepoLinkJson], (err, results) => {
+  db.query(insertQuery, [user_email, user_name, gitRepoLink], (err, results) => {
     if (err) {
       console.error('Error executing query:', err);
       res.status(500).send('Error saving data to the database');
@@ -86,19 +86,25 @@ app.post('/api/update_user', async (req, res) => {
 });
 
 // deletes an entry in the database
-app.delete('/api/delete_entry/:id', (req, res) => {
-  const entry_email = req.params.email; 
-  const github_link = req.params.repoLink;
+app.post('/api/remove_repo', async (req, res) => {
+  const user_email = req.body.email; 
+  const repo_link = req.body.repoLink;
 
-  const deleteQuery = 'DELETE FROM new_user_repositories WHERE entry_email = ? AND github_link = ?';
+  console.log(user_email);
+  console.log(repo_link); 
 
-  db.query(deleteQuery, [entryId], (err, result) => {
+  const deleteQuery = 'DELETE FROM new_user_repositories  WHERE user_email = ?  AND repo_link = ?;';
+
+  //console.log(user_email, repo_link);
+  db.query(deleteQuery, [user_email, repo_link], (err, result) => {
       if (err) {
           console.error('Error executing query:', err);
           res.status(500).send('Error deleting data from the database');
           return;
       }
-      res.status(200).send(`Entry with ID ${entryId} deleted successfully`);
+
+      console.log(`Entry with user name ${user_email} and repo link ${repo_link} deleted successfully`);
+      res.status(200).send(`Entry with user name ${user_email} and repo link ${repo_link} deleted successfully`);
   });
 });
 
