@@ -29,23 +29,31 @@ app.get('/api/read_repo', async (req, res) => {
   }
 });
 
-// getting the repo link from the user
-app.post('/api/update_user', async (req, res) => {
-  const gitRepoLink = req.query.repoLink;
-  const user_name = req.query.username;
-  const user_email = req.query.email;
-  const insertQuery = 'INSERT INTO new_user_repositories (user_email, user_name, repo_link) VALUES (?, ?, ?)';
+// getting the repo link from the user and put it in the database
+app.use(express.json());
 
-  db.query(insertQuery, [user_email, user_name, gitRepoLink], (err, results) => {
+app.post('/api/update_user', async (req, res) => {
+//  console.log("Hello World");
+  const gitRepoLink = req.body.repoLink;
+  const user_name = req.body.name;
+  const user_email = req.body.email;
+
+  const gitRepoLinkJson = JSON.stringify([gitRepoLink]); // converts if needed
+
+  const insertQuery = 'INSERT INTO new_user_repositories (user_email, user_name, repo_link) VALUES (?, ?, ?)';
+  console.log(`query: ${insertQuery}`)
+
+  db.query(insertQuery, [user_email, user_name, gitRepoLinkJson], (err, results) => {
     if (err) {
       console.error('Error executing query:', err);
       res.status(500).send('Error saving data to the database');
       return;
     }
 
-    res.status(200).send('Data saved successfully');
+    res.json({'status': 'Data saved successfully'});
   });
 });
+
 
 app.get('/api/document_file', async (req, res) => {
   const gitRepoLink = req.query.repoLink;
