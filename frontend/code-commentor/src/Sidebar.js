@@ -26,13 +26,24 @@ function Sidebar({ isOpen, onToggle, onRepoLinked, onRepoSelected }) {
 
     // Function to handle the submission of the GitHub repo link
     const handleLinkRepoSubmit = async (repoLink) => {
-        if (repoLink ===  '') {
+        if (repoLink === '') {
             return;
         }
 
         const regex = /^(https?:\/\/)?(www\.)?github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+\/?$/;
         if (!regex.test(repoLink)) {
             console.error('Invalid GitHub repository link. Please provide a valid URL.');
+            return;
+        }
+
+        let repoExists = false;
+        githubRepos.forEach(repo => {
+            if (repo.name === repoLink) {
+                repoExists = true;
+            }
+        });
+        
+        if (repoExists) {
             return;
         }
 
