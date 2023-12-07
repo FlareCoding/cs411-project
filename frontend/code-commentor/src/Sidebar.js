@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Modal from './Modal';
 import './Sidebar.css'; // Ensure the CSS file is correctly linked
 
-function Sidebar({ isOpen, onToggle, onRepoLinked, onRepoSelected }) {
+function Sidebar({ isOpen, onToggle, onRepoLinked, onRepoSelected, onRepoUnlinked }) {
     // State for managing the list of repositories
     const [githubRepos, setGithubRepos] = useState([]);
     const [showModal, setShowModal] = useState(false);
@@ -58,6 +58,14 @@ function Sidebar({ isOpen, onToggle, onRepoLinked, onRepoSelected }) {
         const repoUrl = e.target.innerText;
         onRepoSelected(repoUrl);
     };
+
+    const handleDeleteRepo = (repoUrl) => {
+        // Filter out the repo to delete
+        const updatedRepos = githubRepos.filter(repo => repo.name !== repoUrl);
+        setGithubRepos(updatedRepos);
+
+        onRepoUnlinked(repoUrl);
+    };
   
     return (
       <div className={`sidebar ${isOpen ? 'open' : ''}`}>
@@ -69,7 +77,10 @@ function Sidebar({ isOpen, onToggle, onRepoLinked, onRepoSelected }) {
           {githubRepos.length > 0 ? (
             <ul>
               {githubRepos.map((repo, index) => (
-                <li key={index}>
+                <li key={index} className="repoListItem">
+                  <button className="deleteRepoBtn" onClick={() => handleDeleteRepo(repo.name)}>
+                    x
+                  </button>
                   <button className="repoButton" onClick={repoButton_OnClick}>{repo.name}</button>
                 </li>
               ))}

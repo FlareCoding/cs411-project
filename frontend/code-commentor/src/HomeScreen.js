@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from './HomeScreenHeader'; // Import Header component
 import Sidebar from './Sidebar';
-import saveRepoToDatabase from './db-api';
+import { saveRepoToDatabase, deleteRepoFromDatabase } from './db-api';
 import Prism from 'prismjs';
 import './HomeScreen.css'; // Import the CSS for HomeScreen
 import "prismjs/themes/prism-tomorrow.css";
@@ -28,6 +28,10 @@ function HomeScreen({ username, email, onLogout }) {
     fetchRepoFiles(repoLink);
   };
 
+  const onRepoUnlinked = (repoLink) => {
+    deleteRepoFromDatabase(repoLink, email)
+  };
+  
   // Placeholder function for fetching files
   const fetchRepoFiles = async (repoUrl) => {
     try {
@@ -78,7 +82,7 @@ function HomeScreen({ username, email, onLogout }) {
   return (
     <div className="container">
       <div className="top-half">
-        <Sidebar isOpen={isSidebarOpen} onToggle={() => setIsSidebarOpen(!isSidebarOpen)} onRepoLinked={onRepoLinked} onRepoSelected={onRepoSelected}/>
+        <Sidebar isOpen={isSidebarOpen} onToggle={() => setIsSidebarOpen(!isSidebarOpen)} onRepoLinked={onRepoLinked} onRepoSelected={onRepoSelected} onRepoUnlinked={onRepoUnlinked}/>
         <Header username={username} email={email} onLogout={onLogout} />
         <h3>Files in Selected Repo</h3>
         <div className="listContainer">
