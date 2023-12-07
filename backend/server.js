@@ -85,6 +85,23 @@ app.post('/api/update_user', async (req, res) => {
   });
 });
 
+// deletes an entry in the database
+app.delete('/api/delete_entry/:id', (req, res) => {
+  const entry_email = req.params.email; 
+  const github_link = req.params.repoLink;
+
+  const deleteQuery = 'DELETE FROM new_user_repositories WHERE entry_email = ? AND github_link = ?';
+
+  db.query(deleteQuery, [entryId], (err, result) => {
+      if (err) {
+          console.error('Error executing query:', err);
+          res.status(500).send('Error deleting data from the database');
+          return;
+      }
+      res.status(200).send(`Entry with ID ${entryId} deleted successfully`);
+  });
+});
+
 // Route to fetch and generate documentation for a file in a GitHub repository
 app.get('/api/document_file', async (req, res) => {
   // Get the repository link and file path from the query parameters
