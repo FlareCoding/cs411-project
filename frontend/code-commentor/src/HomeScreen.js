@@ -1,44 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import Modal from './Modal'; // Import Modal component if it's also a separate component
+import React, { useState } from 'react';
 import Header from './HomeScreenHeader'; // Import Header component
 import Sidebar from './Sidebar';
 import './HomeScreen.css'; // Import the CSS for HomeScreen
 
 function HomeScreen({ username, email, onLogout }) {
-  const [githubRepos, setGithubRepos] = useState([]);
   const [selectedRepoUrl, setSelectedRepoUrl] = useState('');
   const [repoFiles, setRepoFiles] = useState([]);
-  const [showModal, setShowModal] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  useEffect(() => {
-    fetchGithubRepos();
-  });
-
-  // Function to handle the submission of the GitHub repo link
-  const handleLinkRepoSubmit = async (repoLink) => {
-    if (repoLink ===  '') {
-      return;
-    }
-
-    const regex = /^(https?:\/\/)?(www\.)?github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+\/?$/;
-    if (!regex.test(repoLink)) {
-      console.error('Invalid GitHub repository link. Please provide a valid URL.');
-      return;
-    }
-
-    setShowModal(false);
-
-    console.log('Repo link:', repoLink);
-
-    // Send GET request to the backend
+  const onRepoSelected = (repoLink) => {
     fetchRepoFiles(repoLink);
-  };
-
-  // Placeholder function for fetching GitHub repos
-  const fetchGithubRepos = async () => {
-    const repos = await mockApiCall(['Repo 1', 'Repo 2', 'Repo 3']);
-    setGithubRepos(repos);
   };
 
   // Placeholder function for fetching files
@@ -49,20 +20,12 @@ function HomeScreen({ username, email, onLogout }) {
         throw new Error('Network response was not ok');
       }
       const data = await response.json(); // Assuming your server responds with JSON data
-      console.log('Response from server:', data);
       // Handle the response data here
       setSelectedRepoUrl(repoUrl);
       setRepoFiles(data);
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
     }
-  };
-
-  // Mock API call
-  const mockApiCall = async (data) => {
-    return new Promise((resolve) => {
-      setTimeout(() => resolve(data), 1000);
-    });
   };
 
   const handleFileClicked = async (filePath) => {
@@ -76,20 +39,12 @@ function HomeScreen({ username, email, onLogout }) {
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
     }
-  };  
+  };
 
   return (
     <div className="container">
-      <Sidebar 
-        isOpen={isSidebarOpen} 
-        onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
-      />
+      <Sidebar isOpen={isSidebarOpen} onToggle={() => setIsSidebarOpen(!isSidebarOpen)} onRepoSelected={onRepoSelected}/>
       <Header username={username} email={email} onLogout={onLogout} />
-      <button className="button" onClick={() => setShowModal(true)}>Link a GitHub Repo</button>
-      <h3>Linked GitHub Repos</h3>
-      <ul className="list">
-        {githubRepos.map((repo, index) => <li key={index}>{repo}</li>)}
-      </ul>
       <h3>Files in Selected Repo</h3>
       <div className="listContainer">
         <ul className="list">
@@ -107,10 +62,6 @@ function HomeScreen({ username, email, onLogout }) {
           ))}
         </ul>
       </div>
-  
-      {showModal && (
-        <Modal onSubmit={handleLinkRepoSubmit} onClose={() => setShowModal(false)} />
-      )}
     </div>
   );
 }
