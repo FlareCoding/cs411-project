@@ -3,6 +3,8 @@ const OpenAI = require('openai');
 const fetch = require('node-fetch');
 require('dotenv').config();
 
+const GITHUB_API_KEY = process.env.GITHUB_API_KEY;
+
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 async function fetchGithubFileContent(repo, filepath) {
@@ -26,30 +28,48 @@ async function fetchGithubFileContent(repo, filepath) {
 }
 
 async function fetchGithubRepoContents(repoUrl, path = '') {
-    try {
-      // Extract the owner and repo name from the URL
-      const repoPath = new URL(repoUrl).pathname;
-      const [owner, repo] = repoPath.split('/').filter(part => part);
+  let files = [];
   
-      const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
-      const response = await axios.get(apiUrl);
-  
-      // Recursively fetch contents for directories
-      let files = [];
+  try {
+    // Extract the owner and repo name from the URL
+    const repoPath = new URL(repoUrl).pathname;
+    const [owner, repo] = repoPath.split('/').filter(part => part);
+    
+    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+    const headers = {
+      'Authorization': `token ${GITHUB_API_KEY}`
+    };
+
+    const response = await axios.get(apiUrl, { headers });
+    console.log(response);
+
+    const excluded_dirs = [
+      'node_modules'
+    ];
+
+    // Check if the response is an array (i.e., a directory)
+    if (Array.isArray(response.data)) {
       for (const item of response.data) {
         if (item.type === 'file') {
           files.push({ name: item.name, path: item.path, type: item.type });
         } else if (item.type === 'dir') {
-          const nestedFiles = await fetchGithubRepoContents(repoUrl, item.path);
-          files = files.concat(nestedFiles);
+          if (!excluded_dirs.includes(item.name)) {
+            const nestedFiles = await fetchGithubRepoContents(repoUrl, item.path);
+            files = files.concat(nestedFiles);
+          }
         }
       }
-  
-      return files;
-    } catch (error) {
-      console.error('Error fetching repository contents:', error);
-      throw error;
+    } else {
+      // Single file response
+      files.push({ name: response.data.name, path: response.data.path, type: response.data.type });
     }
+
+  } catch (error) {
+    console.error('Error fetching repository contents:', error);
+    throw error;
+  }
+
+  return files;
 }
 
 async function requestChatGptResponse(prompt) {

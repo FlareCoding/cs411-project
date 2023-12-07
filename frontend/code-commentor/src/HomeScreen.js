@@ -19,7 +19,7 @@ function HomeScreen({ username, email, onLogout }) {
   }, [selectedFileContent]);
 
   const onRepoLinked = (repoLink) => {
-    saveRepoToDatabase(repoLink, username, email);
+    //saveRepoToDatabase(repoLink, username, email);
   };
 
   const onRepoSelected = (repoLink) => {
