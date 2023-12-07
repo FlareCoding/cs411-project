@@ -85,6 +85,22 @@ app.post('/api/update_user', async (req, res) => {
   });
 });
 
+// links the existing data entries for that email
+app.get('/api/get_repos_for_user', async (req, res) => {
+  const userEmail = req.body.email; 
+
+  const query = 'SELECT * FROM new_user_repositories WHERE user_email = ?';
+
+  db.query(query, [userEmail], (err, results) => {
+      if (err) {
+          console.error('Error executing query:', err);
+          res.status(500).send('Error fetching data from the database');
+          return;
+      }
+      res.json(results);
+  });
+});
+
 // deletes an entry in the database
 app.post('/api/remove_repo', async (req, res) => {
   const user_email = req.body.email; 
