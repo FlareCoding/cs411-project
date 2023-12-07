@@ -1,35 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import Modal from './Modal';
+import { getReposForUserByEmail } from './db-api';
 import './Sidebar.css'; // Ensure the CSS file is correctly linked
 
-function Sidebar({ isOpen, onToggle, onRepoLinked, onRepoSelected, onRepoUnlinked, fetchUserRepos }) {
+function Sidebar({ email, isOpen, onToggle, onRepoLinked, onRepoSelected, onRepoUnlinked }) {
     // State for managing the list of repositories
     const [githubRepos, setGithubRepos] = useState([]);
     const [showModal, setShowModal] = useState(false);
   
-    useEffect(() => {
-      fetchUserRepos((repos) => {
-        console.log(repos);
-        setGithubRepos(repos);
-      });
-    }, [fetchUserRepos]);
-
     // Fetch GitHub repos only on component mount
     useEffect(() => {
         const fetchGithubRepos = async () => {
-            const repos = await mockApiCall([]); // Replace with your initial repo names
+            let repos = await getReposForUserByEmail(email);
+            repos = repos.map(str => ({ name: str }));
             setGithubRepos(repos);
         };
 
         fetchGithubRepos();
-    }, []); // The empty array ensures this effect runs only once on mount
-
-    const mockApiCall = async (data) => {
-        // This simulates an API call
-        return new Promise((resolve) => {
-            setTimeout(() => resolve(data), 1000);
-        });
-    };
+    }, [email]); // The empty array ensures this effect runs only once on mount
 
     // Function to handle the submission of the GitHub repo link
     const handleLinkRepoSubmit = async (repoLink) => {

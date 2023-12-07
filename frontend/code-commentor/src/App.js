@@ -43,7 +43,6 @@ function App() {
       }
 
       setUserData(data);
-      console.log('User data fetched successfully.');
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
@@ -52,7 +51,6 @@ function App() {
   const logout = () => {
     localStorage.removeItem('accessToken');
     setUserData(null); // Update the state to reflect that the user is logged out
-    console.log('User logged out. Access token removed from local storage.');
   };
 
   return (
