@@ -37,4 +37,23 @@
     transform: translateY(-50%);
     z-index: 2;
 }
+
+.repoButton {
+    background-color: #333; /* Same as home screen repo file buttons */
+    color: white; /* Text color */
+    padding: 5px 10px; /* Padding inside the button */
+    margin: 5px 0; /* Margin for vertical spacing */
+    border: 1px solid transparent; /* Border style */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Cursor to pointer */
+    display: block; /* Stack buttons vertically */
+    text-align: left; /* Align text to the left */
+    transition: background-color 0.1s; /* Transition for hover effect */
+    width: 100%; /* Full width */
+}
+
+.repoButton:hover {
+    background-color: #444; /* Darker background on hover */
+    color: #fff; /* Keep white color on hover */
+}
   
