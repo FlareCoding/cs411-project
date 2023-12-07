@@ -41,7 +41,6 @@ async function fetchGithubRepoContents(repoUrl, path = '') {
     };
 
     const response = await axios.get(apiUrl, { headers });
-    console.log(response);
 
     const excluded_dirs = [
       'node_modules'

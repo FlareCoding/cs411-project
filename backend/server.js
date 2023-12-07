@@ -61,7 +61,7 @@ app.get('/api/document_file', async (req, res) => {
 
   try {
     const content = await thirdPartyApi.fetchGithubFileContent(gitRepoLink, filepath);
-    const prompt = `Please place comments above each of the functions in the following code without adding any extra information or commentary:\n${content}`;
+    const prompt = `Please show the same fully provided code but with code comments added throughout, especially above function declarations, please without adding any extra information or commentary:\n${content}`;
     console.log('Sent request to ChatGPT-3.5, awaiting response...');
 
     const response = await thirdPartyApi.requestChatGptResponse(prompt); // Await the response
