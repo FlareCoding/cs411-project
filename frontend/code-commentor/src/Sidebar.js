@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Modal from './Modal';
 import './Sidebar.css'; // Ensure the CSS file is correctly linked
 
-function Sidebar({ isOpen, onToggle, onRepoSelected }) {
+function Sidebar({ isOpen, onToggle, onRepoLinked, onRepoSelected }) {
     // State for managing the list of repositories
     const [githubRepos, setGithubRepos] = useState([]);
     const [showModal, setShowModal] = useState(false);
@@ -39,6 +39,7 @@ function Sidebar({ isOpen, onToggle, onRepoSelected }) {
         setShowModal(false);
         setGithubRepos([...githubRepos, { name: repoLink }]);
 
+        onRepoLinked(repoLink);
         onRepoSelected(repoLink);
     };
 

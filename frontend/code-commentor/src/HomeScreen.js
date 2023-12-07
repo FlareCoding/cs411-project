@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import Header from './HomeScreenHeader'; // Import Header component
 import Sidebar from './Sidebar';
+import saveRepoToDatabase from './db-api';
 import './HomeScreen.css'; // Import the CSS for HomeScreen
 
 function HomeScreen({ username, email, onLogout }) {
   const [selectedRepoUrl, setSelectedRepoUrl] = useState('');
   const [repoFiles, setRepoFiles] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  const onRepoLinked = (repoLink) => {
+    saveRepoToDatabase(repoLink, username, email);
+  };
 
   const onRepoSelected = (repoLink) => {
     fetchRepoFiles(repoLink);
@@ -43,7 +48,7 @@ function HomeScreen({ username, email, onLogout }) {
 
   return (
     <div className="container">
-      <Sidebar isOpen={isSidebarOpen} onToggle={() => setIsSidebarOpen(!isSidebarOpen)} onRepoSelected={onRepoSelected}/>
+      <Sidebar isOpen={isSidebarOpen} onToggle={() => setIsSidebarOpen(!isSidebarOpen)} onRepoLinked={onRepoLinked} onRepoSelected={onRepoSelected}/>
       <Header username={username} email={email} onLogout={onLogout} />
       <h3>Files in Selected Repo</h3>
       <div className="listContainer">
