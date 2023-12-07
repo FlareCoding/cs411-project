@@ -48,3 +48,18 @@ export const deleteRepoFromDatabase = async (repoUrl, email) => {
     console.error('There was a problem with the fetch operation:', error);
   }
 };
+
+export const getReposForUserByEmail = async (email) => {
+  try {
+    const response = await fetch(`http://localhost:4000/api/get_repos_for_user?email=${email}`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json(); // Assuming your server responds with JSON data
+    return data;
+  } catch (error) {
+    console.error('There was a problem with the fetch operation:', error);
+    return [];
+  }
+};
