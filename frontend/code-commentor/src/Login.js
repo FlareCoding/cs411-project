@@ -22,8 +22,9 @@ function Login() {
     };
     
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', flexDirection: 'column' }}>
-        <h1 style={{ marginBottom: '20px' }}>Welcome to My App</h1>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', flexDirection: 'column', backgroundColor: '#1a1a1a', color: 'white' }}>
+        <h1 style={{ marginBottom: '20px' }}>Welcome to Code Commentor!</h1>
+        <h3 style={{ marginBottom: '20px' }}>Please login to use the service...</h3>
         <button onClick={handleLogin} style={buttonStyle}>
             Login with OAuth Provider
         </button>
