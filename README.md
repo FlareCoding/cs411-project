@@ -33,4 +33,4 @@ Gianna Sfrisi - gsfrisi@bu.edu
 Albert Slepak - aslepak@bu.edu
 
 ## Video Link
-insert link here
+[![Watch the video](https://i3.ytimg.com/vi/GlVFxKNNtS0/maxresdefault.jpg)](https://youtu.be/GlVFxKNNtS0)
